@@ -3,6 +3,7 @@ package hw.book.controller;
 import hw.book.entity.Book;
 import hw.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +33,10 @@ public class BookController {
     public Book getBookByIsbn(@PathVariable(name = "isbn") Long isbn){
         return bookService.findByIsbn(isbn);
     }
+
+    @DeleteMapping("/books/{isbn}")
+    public boolean deleteBookByIsbn(@PathVariable(name = "isbn") Long isbn){
+        return bookService.removeBook(isbn);
+    };
 
 }

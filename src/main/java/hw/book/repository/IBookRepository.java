@@ -8,4 +8,6 @@ public interface IBookRepository {
     List<Book> findAll();
     Book findByIsbn(Long isbn);
     boolean createNewBook (Book book);
+    boolean removeBook (Book book);
+
 }

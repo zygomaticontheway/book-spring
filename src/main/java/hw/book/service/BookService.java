@@ -37,6 +37,14 @@ public class BookService implements IBookService {
         return repository.createNewBook(book);
     }
 
+    @Override
+    public boolean removeBook(Long isbn) {
+        if(findByIsbn(isbn) != null) {
+            return repository.removeBook(findByIsbn(isbn));
+        }
+        return false;
+    }
+
     public Book findByIsbn(Long isbn) {
         return repository.findByIsbn(isbn);
     }

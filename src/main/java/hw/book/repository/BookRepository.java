@@ -41,4 +41,9 @@ public class BookRepository implements IBookRepository {
             return false;
         }
     }
+
+    @Override
+    public boolean removeBook(Book book) {
+        return db.remove(book);
+    }
 }
