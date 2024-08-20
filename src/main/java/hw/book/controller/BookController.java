@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class BookController {
     private final BookService bookService;
 
@@ -30,12 +31,11 @@ public class BookController {
     }
 
     @GetMapping("/books/{isbn}")
-    public Book getBookByIsbn(@PathVariable(name = "isbn") Long isbn){
+    public Book getBookByIsbn(@PathVariable(name = "isbn") String isbn){
         return bookService.findByIsbn(isbn);
     }
-
     @DeleteMapping("/books/{isbn}")
-    public boolean deleteBookByIsbn(@PathVariable(name = "isbn") Long isbn){
+    public boolean deleteBookByIsbn(@PathVariable(name = "isbn") String isbn){
         return bookService.removeBook(isbn);
     };
 

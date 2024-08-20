@@ -8,6 +8,6 @@ public interface IBookService {
 
     List<Book> getBooks(String title, String author);
     boolean createNewBook(Book book);
-    boolean removeBook(Long isbn);
+    boolean removeBook(String isbn);
 
 }

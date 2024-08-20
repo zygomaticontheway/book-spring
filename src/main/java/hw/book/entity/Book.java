@@ -1,17 +1,20 @@
 package hw.book.entity;
 
 public class Book {
-    private Long isbn;
+    private String isbn;
     private String title;
     private String author;
 
-    public Book(Long isbn, String title, String author) {
+    public Book(String isbn, String title, String author) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
     }
 
-    public Long getIsbn() {
+    public Book() {
+    }
+
+    public String getIsbn() {
         return isbn;
     }
 

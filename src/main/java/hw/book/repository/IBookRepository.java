@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IBookRepository {
     List<Book> findAll();
-    Book findByIsbn(Long isbn);
-    boolean createNewBook (Book book);
-    boolean removeBook (Book book);
+    Book findByIsbn(String isbn);
+    boolean addBook(Book book);
+    boolean removeBook(Book book);
 
 }
