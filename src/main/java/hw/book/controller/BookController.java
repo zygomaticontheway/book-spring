@@ -1,5 +1,7 @@
 package hw.book.controller;
 
+import hw.book.dto.BookRequestDto;
+import hw.book.dto.BookResponseDto;
 import hw.book.entity.Book;
 import hw.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +21,19 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public List<Book> getBooks (@RequestParam(name = "title", required = false, defaultValue = "")String title,
-                                @RequestParam(name = "author", required = false, defaultValue = "")String author){
-      return bookService.getBooks(title, author);
+    public List<BookResponseDto> getBooks (@RequestParam(name = "title", required = false, defaultValue = "")String title,
+                                           @RequestParam(name = "author", required = false, defaultValue = "")String author,
+                                           @RequestParam(name = "yearOfPublication", required = false, defaultValue = "")int yearOfPublication){
+      return bookService.getBooks(title, author, yearOfPublication);
     };
 
     @PostMapping("/books")
-    public Book addBook(Book book){
-        bookService.createNewBook(book);
-        return book;
+    public boolean addBook(BookRequestDto book){
+        return bookService.createNewBook(book);
     }
 
     @GetMapping("/books/{isbn}")
-    public Book getBookByIsbn(@PathVariable(name = "isbn") String isbn){
+    public BookResponseDto getBookByIsbn(@PathVariable(name = "isbn") String isbn){
         return bookService.findByIsbn(isbn);
     }
     @DeleteMapping("/books/{isbn}")

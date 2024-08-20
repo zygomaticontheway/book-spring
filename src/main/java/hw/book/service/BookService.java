@@ -1,5 +1,7 @@
 package hw.book.service;
 
+import hw.book.dto.BookRequestDto;
+import hw.book.dto.BookResponseDto;
 import hw.book.entity.Book;
 import hw.book.repository.IBookRepository;
 import org.modelmapper.ModelMapper;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @Service
@@ -24,33 +27,38 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<Book> getBooks(String title, String author) {
+    public List<BookResponseDto> getBooks(String title, String author, Integer yearOfPublication) {
 
-        Predicate<Book> predicateByTitle = (title.equals("") ? book -> true : book -> book.getTitle().toLowerCase().contains(title));
-        Predicate<Book> predicateByAuthor = (author.equals("") ? book -> true : book -> book.getAuthor().toLowerCase().contains(author));
+        Predicate<BookResponseDto> predicateByTitle = (title.equals("") ? book -> true : book -> book.getTitle().toLowerCase().contains(title));
+        Predicate<BookResponseDto> predicateByAuthor = (author.equals("") ? book -> true : book -> book.getAuthor().toLowerCase().contains(author));
+        Predicate<BookResponseDto> predicateByYearOfPublication = (yearOfPublication.equals(0) ? book -> true : book -> Objects.equals(book.getYearOfPublication(), yearOfPublication));
 
-        Predicate<Book> allconditions = predicateByTitle.and(predicateByAuthor);
+        Predicate<BookResponseDto> allconditions = predicateByTitle.and(predicateByAuthor).and(predicateByYearOfPublication);
 
-        return repository.findAll()
+        List<BookResponseDto> list = repository.findAll()
                 .stream()
                 .filter(allconditions)
                 .toList();
+
+        return list;
     }
 
     @Override
-    public boolean createNewBook(Book book) {
+    public boolean createNewBook(BookRequestDto book) {
+
         return repository.addBook(book);
     }
 
     @Override
     public boolean removeBook(String isbn) {
         if(findByIsbn(isbn) != null) {
-            return repository.removeBook(findByIsbn(isbn));
+            return repository.removeBook(isbn);
         }
         return false;
     }
 
-    public Book findByIsbn(String isbn) {
+    public BookResponseDto findByIsbn(String isbn) {
+
         return repository.findByIsbn(isbn);
     }
 }

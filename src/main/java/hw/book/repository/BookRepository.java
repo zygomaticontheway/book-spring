@@ -1,5 +1,7 @@
 package hw.book.repository;
 
+import hw.book.dto.BookRequestDto;
+import hw.book.dto.BookResponseDto;
 import hw.book.entity.Book;
 
 import java.util.ArrayList;
@@ -18,23 +20,26 @@ public class BookRepository implements IBookRepository {
 
 
     @Override
-    public List<Book> findAll() {
-        return new ArrayList<>(db);
+    public List<BookResponseDto> findAll() {
+        return new ArrayList<>(BookResponseDto.of(db));
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
-        return findAll()
+    public BookResponseDto findByIsbn(String isbn) {
+
+        Book foundedBook = db
                 .stream()
                 .filter(book -> book.getIsbn().equals(isbn))
                 .findFirst()
                 .orElse(null);
+        return BookResponseDto.of(foundedBook);
     }
 
     @Override
-    public boolean addBook(Book book) {
+    public boolean addBook(BookRequestDto book) {
         if(findByIsbn(book.getIsbn()) == null){
-            db.add(book);
+            Book entity = BookRequestDto.toEntity(book);
+            db.add(entity);
             return true;
         } else{
             System.out.println("Book already exists");
@@ -43,7 +48,7 @@ public class BookRepository implements IBookRepository {
     }
 
     @Override
-    public boolean removeBook(Book book) {
-        return db.remove(book);
+    public boolean removeBook(String isbn) {
+        return db.remove(findByIsbn(isbn));
     }
 }

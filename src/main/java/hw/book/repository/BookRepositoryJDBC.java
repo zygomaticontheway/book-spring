@@ -1,5 +1,7 @@
 package hw.book.repository;
 
+import hw.book.dto.BookRequestDto;
+import hw.book.dto.BookResponseDto;
 import hw.book.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,30 +28,31 @@ public class BookRepositoryJDBC implements IBookRepository{
         String isbn = row.getString("isbn");
         String title = row.getString("title");
         String author = row.getString("author");
+        Integer yearOfPublication = row.getInt("yearofpublication");
 
-        return new Book(isbn, title, author);
+        return new Book(isbn, title, author, yearOfPublication);
     };
 
     @Override
-    public List<Book> findAll() {
+    public List<BookResponseDto> findAll() {
 
         String query = "SELECT * FROM books";
 
-        return jdbcTemplate.query(query, BOOK_ROW_MAPPER);
+        return BookResponseDto.of(jdbcTemplate.query(query, BOOK_ROW_MAPPER));
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
+    public BookResponseDto findByIsbn(String isbn) {
 
         String query = "SELECT * FROM books WHERE isbn = ?";
 
         Book foundedBook = jdbcTemplate.queryForObject(query, new Object[]{isbn}, BOOK_ROW_MAPPER);
 
-        return foundedBook;
+        return BookResponseDto.of(foundedBook);
     }
 
     @Override
-    public boolean addBook(Book book) {
+    public boolean addBook(BookRequestDto book) {
 
         String query = "INSERT INTO books (isbn, title, author) VALUES (?, ?, ?)";
 
@@ -64,11 +67,11 @@ public class BookRepositoryJDBC implements IBookRepository{
     }
 
     @Override
-    public boolean removeBook(Book book) {
+    public boolean removeBook(String isbn) {
         String query = "DELETE FROM books WHERE isbn = ?";
 
-        if(findByIsbn(book.getIsbn()) != null) {
-            int rowsAffected = jdbcTemplate.update(query, book.getIsbn());
+        if(findByIsbn(isbn) != null) {
+            int rowsAffected = jdbcTemplate.update(query, isbn);
             return rowsAffected == 1;
         } else {
             System.out.println("Book does not exist");
